@@ -1,0 +1,282 @@
+.pixel-font {
+    font-family: 'Press Start 2P', cursive;
+}
+
+body {
+    background-color: #1a202b;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 50px;
+}
+
+/* ------------------------------------------------------------------- */
+/* PANTALLA DE INICIO (LA PUERTA DEL AUDIO) */
+/* ------------------------------------------------------------------- */
+#splash-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: #000;
+    color: #D3B87A;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1000;
+    cursor: pointer;
+    transition: opacity 0.5s ease-out;
+    opacity: 1;
+}
+
+#splash-screen h2 {
+    font-size: clamp(16px, 4vw, 36px);
+    margin-bottom: 20px;
+    animation: pulse 1.5s infinite;
+    text-shadow: 0 0 5px rgba(255, 255, 200, 0.3), /* Resplandor amarillo claro */
+    0 0 10px rgba(211, 184, 122, 0.5);
+}
+
+#splash-screen p {
+    font-size: clamp(10px, 2vw, 18px);
+    color: #69707e;
+    margin-top: 10px;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 2; }
+    100% { opacity: 0.8; }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.rectangle {
+    background-color: #1f2937;
+    height: 600px;
+    width: 80%;
+    margin-top: 7%;
+    max-width: 1000px;
+    border: #D3B87A solid 7px;
+    border-radius: 8px;
+
+    box-shadow: 0 0 15px rgba(211, 184, 122, 0.6), /* Sombra dorada suave */
+    0 0 3px 1px #FFFBE8; /* Sombra blanca muy pequeña para el destello */
+    display: flex;
+    flex-direction: column;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+
+#title {
+    text-align: center;
+    color: #D3B87A;
+    margin-bottom: 20px;
+}
+
+#title h1 {
+    font-size: clamp(14px, 4vw, 30px);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 5px rgba(255, 255, 200, 0.3), /* Resplandor amarillo claro */
+                0 0 10px rgba(211, 184, 122, 0.5);
+}
+
+#subt {
+    font-size: clamp(10px, 2vw, 16px);
+    margin-top: 0;
+    color: #D3B87A;
+    text-shadow: 0 0 5px rgba(255, 255, 200, 0.3), /* Resplandor amarillo claro */
+                0 0 10px rgba(211, 184, 122, 0.5);
+}
+.main-content {
+    display: flex; /* Habilita las columnas lado a lado */
+    flex-grow: 1;
+    gap: 30px;
+    min-height: 0;
+    padding-bottom: 20px;
+}
+
+#leftstuff {
+    margin-top: 7%;
+    flex-shrink: 0; /* Evita que se encoja */
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#buttons {
+    font-family: 'Press Start 2P', cursive;
+    color: aliceblue;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 15px;
+    padding-left: 10px;
+    text-align: left;
+    background-color: #2b6aad;
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0 4px 0 #1f4e7c; /* Sombra para efecto 3D/presión */
+    transition: all 0.1s ease;
+    cursor: pointer;
+}
+
+#buttons:active {
+    box-shadow: 0 1px 0 #1f4e7c;
+    transform: translateY(3px);
+}
+
+#rightstuff {
+    color: #e1e3e7;
+    text-align: left;
+    line-height: 1.5;
+
+    flex-grow: 1;
+    height: 90%;
+    overflow-y: scroll;
+
+    border: #D3B87A solid 5px;
+    border-radius: 5px;
+    background-color: #090c10;
+    padding: 15px;
+
+    box-shadow: 0 0 10px rgba(211, 184, 122, 0.4),
+    0 0 2px 1px #FFFBE8;
+}
+
+#rightstuff::-webkit-scrollbar {
+    width: 10px;
+}
+#rightstuff::-webkit-scrollbar-thumb {
+    background-color: #D3B87A;
+    border-radius: 5px;
+}
+#rightstuff::-webkit-scrollbar-track {
+    background-color: #1f2937;
+}
+
+#rightstuff h3 {
+    color: #D3B87A; margin-top: 0;
+}
+.enemy-list {
+    display: grid; /* Usa CSS Grid para la distribución 2x2 */
+    grid-template-columns: 1fr 1fr; /* Divide el ancho disponible en dos columnas iguales */
+    gap: 15px; /* Espacio entre los botones (horizontal y vertical) */
+    margin-top: 15px;
+}
+.enemy-list button {
+    font-family: 'Press Start 2P', cursive;
+    display: block;
+    width: 100%; /* Ocupa el 100% del espacio de su celda en la cuadrícula */
+    height: 60px; /* Botones más altos para que sean más notorios */
+    text-align: center; /* Centramos el texto en el botón */
+    padding: 10px;
+
+    /* Mantenemos los estilos arcade */
+    background: rgba(43, 106, 173, 0.3);
+    color: #e1e3e7;
+    border: 2px solid #D3B87A; /* Borde dorado */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    /* Ajuste para que el texto pixelado se vea mejor en el centro */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.enemy-list button:hover {
+    font-family: 'Press Start 2P', cursive;
+    background: rgba(43, 106, 173, 0.6);
+}
+
+.back-button {
+    font-family: 'Press Start 2P', cursive;
+    background: rgba(43, 106, 173, 0.3);
+    color: #e1e3e7;
+    border: 2px solid #D3B87A; /* Borde dorado */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    /* Ajuste para que el texto pixelado se vea mejor en el centro */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* MODIFICACIONES DE TAMAÑO */
+    width: 130px; /* Hacemos el botón más estrecho */
+    height: 35px; /* Hacemos el botón más bajo */
+    font-size: 10px; /* Reducimos el tamaño de la fuente */
+    padding: 0 5px; /* Ajustamos el padding */
+    margin-top: 20px; /* Espacio superior */
+
+    /* Alineación de texto si es necesario */
+    text-align: center;
+}
+
+.enemy-ficha-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.enemy-ficha-container img {
+    width: 80%;
+    max-width: 300px;
+    height: auto;
+    border: 3px solid #D3B87A;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+#copyright {
+    font-size: 12px;
+    color: #69707e;
+    margin-top: auto;
+    padding-top: 20px;
+    line-height: 1.5;
+}
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrado horizontal */
+    justify-content: center; /* Centrado vertical */
+    height: 100%; /* Ocupa toda la altura disponible del contenedor padre */
+    text-align: center;
+}
+.welcome-logo{
+    height: 300px;
+    width: 300px;
+}
+@media (max-width: 768px) {
+    .rectangle {
+        width: 95%;
+        height: auto;
+        min-height: 600px;
+        padding: 15px;
+    }
+
+    .main-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    #leftstuff {
+        width: 100%;
+    }
+
+    #buttons {
+        height: 40px;
+    }
+
+    #rightstuff {
+        height: 300px;
+        margin-left: 0;
+    }}
