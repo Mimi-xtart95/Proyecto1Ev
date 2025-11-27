@@ -6,7 +6,6 @@ import java.io.File;
 public class Juego {
     static Random r = new Random();
     static Scanner sc = new Scanner(System.in);
-    static Clip musicaMenu;
     static boolean llave = false;
     static boolean pocion = false;
     static boolean amuleto = false;
@@ -15,8 +14,8 @@ public class Juego {
     public static int dmg;
     public static int decision;
 
-    public void main(String[] args) {
-        //iniciarMusicaMenu();
+    public static void main(String[] args) {
+        Audio.iniciarMusicaMenu();
         ejecutarMenu();
     }
 
@@ -26,7 +25,7 @@ public class Juego {
         System.out.println("     Presiona 0 para Iniciar");
     }
 
-    public void ejecutarMenu() {
+    public static void ejecutarMenu() {
         int opcion;
         boolean salir = false;
 
@@ -44,7 +43,6 @@ public class Juego {
             }
         }
     }
-
     public static int leerOpcion() {
         try {
             int op = sc.nextInt();
@@ -56,23 +54,7 @@ public class Juego {
         }
     }
 
-    public static void iniciarMusicaMenu() {
-        try {
-            String ruta = "C:\\Users\\mirem\\IdeaProjects\\Proyecto 1Ev\\Original-Theme.wav";
-
-            AudioInputStream audio = AudioSystem.getAudioInputStream(new File(ruta));
-            musicaMenu = AudioSystem.getClip();
-            musicaMenu.open(audio);
-            musicaMenu.loop(Clip.LOOP_CONTINUOUSLY);
-            musicaMenu.start();
-
-            System.out.println("🎵 🎵 🎵 🎵 🎵");
-
-        } catch (Exception e) {
-        }
-    }
-
-    public void elegirPersonaje() {
+    public static void elegirPersonaje() {
         System.out.println("------------------------------------------------------------");
         System.out.println("--ELIGE TU PERSONAJE--");
         System.out.println("1. Guerrero");
@@ -106,34 +88,34 @@ public class Juego {
         }
     }
 
-    public void guerrero() {
+    public static void guerrero() {
         System.out.println("------------------------------------------------------------");
         System.out.println("¡Has elegido el guerrero! ( •̀ㅂ•́)و🗡️");
         System.out.println("------------------------------------------------------------");
-        PV = 100;
-        dmg = 10;
+        PV = 125;
+        dmg = 30;
         mostrarHUD("Guerrero ( •̀-•́)و🗡️          ", PV, dmg);
     }
 
-    public void mago() {
+    public static void mago() {
         System.out.println("------------------------------------------------------------");
         System.out.println("¡Has elegido al mago! (っ-^o^-)っ🪄ﾟ");
         System.out.println("------------------------------------------------------------");
-        PV = 75;
-        dmg = 20;
+        PV = 100;
+        dmg = 40;
         mostrarHUD("Mago (っ-^o^-)っ🪄ﾟ          ", PV, dmg);
     }
 
-    public void paladin() {
+    public static void paladin() {
         System.out.println("------------------------------------------------------------");
         System.out.println("¡Has encontrado el Easter Egg y eres un Paladín! [🛡️•̀o•́]r");
         System.out.println("------------------------------------------------------------");
-        PV = 120;
-        dmg = 25;
+        PV = 150;
+        dmg = 75;
         mostrarHUD("Paladín [🛡️•̀o•́]r            ", PV, dmg);
     }
 
-    public void mostrarHUD(String clase, int PV, int dmg) {
+    public static void mostrarHUD(String clase, int PV, int dmg) {
         System.out.println("┌─────────────────────────────┐");
         System.out.printf("│ %-20s│\n", clase);
         System.out.printf("│ PV: %-3d ❤️ / Daño: %-3d      │\n", PV, dmg);
@@ -174,7 +156,7 @@ public class Juego {
 
         while (enemigo.PV > 0 && PV > 0) {
 
-            System.out.println("PV enemigo: " + enemigo.PV + " 💀" + " | PV PJ: " + PV + "❤️");
+            System.out.println("PV enemigo: " + enemigo.PV + " 💀" + " | PV PJ: " + PV + " ❤️");
             System.out.println("Elige acción:");
             System.out.println("1. Atacar");
             System.out.println("2. Bloquear");
@@ -183,8 +165,13 @@ public class Juego {
             int accionpj = leerOpcion();
 
             if (accionpj == 1) {
+                Audio.sonidoCombate();
+                if (enemigoAccion == 1 && enemigo.nombre.equals("Aníd")) {
+                    Audio.ataqueGitano();
+                    System.out.println(enemigo.nombre + " bloquea tu ataque.");
+                    System.out.println("Tu golpe no consigue atravesar su guardia (nenita).");
 
-                if (enemigoAccion == 1) {
+                } else if (enemigoAccion == 1) {
                     System.out.println(enemigo.nombre + " bloquea tu ataque.");
                     System.out.println("Tu golpe no consigue atravesar su guardia (nenita).");
 
@@ -195,14 +182,27 @@ public class Juego {
 
                 if (enemigo.PV <= 0) {
                     System.out.println("¡Has derrotado a " + enemigo.nombre + "! 🪦");
+                    Audio.sonidoCombat.stop();
                     if (pocion == true){
-                        System.out.println("Pulsa 1 para tomar poción");
+                        System.out.println("Pulsa 0 para tomar poción");
                         int opcion;
                         opcion = leerOpcion();
-                        if (opcion == 1) {
+                        if (opcion == 0) {
                             PV = PV+100;
                             pocion = false;
-                            System.out.println("Tus PV han aumentado a: " + PV);
+                            System.out.println("Tus PV han aumentado a: " + PV + " ❤️");
+                            verInventario();
+                        }
+                    } else if (pocion == false && amuleto == true && decision == 1) {
+                        conversacionGitano();
+                        System.out.println("Pulsa 0 para usar amuleto");
+                        int opcion;
+                        opcion = leerOpcion();
+                        if (opcion == 0) {
+                            PV = PV+200;
+                            dmg = dmg+25;
+                            amuleto = false;
+                            System.out.println("Tus PV han aumentado a: " + PV  + " ❤️" + "\nTu DMG ha aumentado a: " + dmg + ".");
                             verInventario();
                         }
                     }
@@ -239,29 +239,32 @@ public class Juego {
     }
 
     public static void continuarHistoria() {
-        if (enemigo[0].PV==0 && enemigo[1].PV>0 && enemigo[2].PV>0 && enemigo[3].PV>0 && enemigo[4].PV>0) {
+        if (enemigo[0].PV<=0 && enemigo[1].PV>0 && enemigo[2].PV>0 && enemigo[3].PV>0 && enemigo[4].PV>0) {
             preCruzarPantano();
-        } else if (enemigo[1].PV==0 && enemigo[2].PV>0 && enemigo[3].PV>0 && enemigo[4].PV>0) {
+        } else if (enemigo[1].PV<=0 && enemigo[2].PV>0 && enemigo[3].PV>0 && enemigo[4].PV>0) {
             encuentroPrisioneros();
-        } else if (enemigo[2].PV==0 && enemigo[3].PV>0 && enemigo[4].PV>0) {
-            //encuentroEstafador();
-        } else if (enemigo[3].PV==0 && enemigo[4].PV>0) {
-            if(decision == 1){
-            //combate con el puto gitano
-            }
-        }else if (enemigo[4].PV>0){
-            //Princesa
+        } else if (enemigo[2].PV<=0 && enemigo[3].PV>0 && enemigo[4].PV>0 && decision == 1) {
+            combateGitano();
+        } else if (enemigo[2].PV<=0 && enemigo[3].PV>0 && enemigo[4].PV>0) {
+            Audio.subirEscaleras();
+            opcionesFinal();
+        } else if (enemigo[3].PV<=0 && enemigo[4].PV>0) {
+            opcionesFinal();
+        } else if (enemigo[4].PV<=0) {
+            gameCleared();
         }
     }
+
     public static void primeraDecision() {
         System.out.println("Toma un camino");
         System.out.println("⬅️1. Izquierda | 2. Derecha➡️");
         decision = leerOpcion();
+        Audio.sonidoCaminar();
         if (decision == 1) {
             System.out.println("------------------------------------------------------------");
             System.out.println("¡Has elegido el camino izquierdo!");
             System.out.println("------------------------------------------------------------");
-            System.out.println("A lo lejos divisas una silueta conocida, un recuerdo de tu pasado, por lo que decides acercarte.");
+            System.out.println("A lo lejos divisas una silueta familiar, un recuerdo de tu pasado, por lo que decides acercarte.");
             System.out.println("Un gitano comerciante de nombre Aníd te ofrece la solución a todos tus problemas.");
             System.out.println("------------------------------------------------------------");
             System.out.println("Tienes 2 opciones");
@@ -311,7 +314,7 @@ public class Juego {
             recogerLlave();
         } else if (encuentro == 2) {
             System.out.println("------------------------------------------------------------");
-            System.out.println("Decides atacar al gitano, sin embargo su navaja es más rápida que tu espada.");
+            System.out.println("Decides atacar al gitano, si    n embargo su navaja es más rápida que tu espada.");
             gameOver();
         }
     }
@@ -319,13 +322,14 @@ public class Juego {
     public static void recogerLlave() {
         System.out.println("------------------------------------------------------------");
         llave = true;
-        System.out.println("Ahora tienes la llave. 🗝️");
+        System.out.println("Has obtenido la llave. 🗝️");
         verInventario();
         cruzarPantano();
     }
 
     public static void opcionesCastillo() {
         System.out.println("------------------------------------------------------------");
+        Audio.sonidoCaminar();
         System.out.println("Continuas caminando hasta llegar al castillo...");
         System.out.println("...");
         System.out.println("El imponente castillo de seis pisos se alza ante ti, un monolito oscuro y silencioso.");
@@ -334,28 +338,32 @@ public class Juego {
         System.out.println("Eliges 1 o 2 para probar la llave.");
         int pruebaLlave;
         pruebaLlave = leerOpcion();
-        if (pruebaLlave == 1) {
+        if (pruebaLlave == 2) {
             System.out.println("------------------------------------------------------------");
             System.out.println("La llave funciona y puedes entrar al castillo 🏰");
+            //Audio.abrirLlave();
             llave = false;
             opcionesprimerPiso();
-        } else if(pruebaLlave == 2){
+        } else if(pruebaLlave == 1){
         System.out.println("La llave no funciona... ❌🗝️");
-        System.out.println("Te encuentras muy cansado después de todo este largo viaje y decides suicidarte ☠️");
+        System.out.println("Tras todo el esfuerzo que te ha llevado para llegar hasta donde estas ahora, comienzas a questionarte el sentido de tus acciones\nDecides rendirte y te suicidas //"); /*Te encuentras muy cansado después de todo este largo viaje y decides suicidarte ☠️*/
         gameOver();
     }
         }
 
     public static void opcionesprimerPiso() {
+
         System.out.println("----------------------------------------------------------");
         System.out.println("Al entrar, un escalofrío te recorre la espalda, no solo por el frío, sino por el peso de tu deseo.");
         System.out.println("El aire dentro es denso, cargado con el olor a moho, miedo y una magia ancestral maligna.");
         System.out.println("Tu corazón late con una mezcla de terror y una inquebrantable determinación de rescatar a tu amad@.");
         System.out.println("Decides subir al siguiente piso, sin saber que te encontrarás.");
         System.out.println("Presiona 0 para subir al siguiente piso.");
+        Audio.sonidoCastillo();
         int decision;
         decision = leerOpcion();
         if (decision == 0) {
+            Audio.subirEscaleras();
         System.out.println("Te diriges hacia el siguiente piso");
         opcionessegundoPiso();
         }
@@ -363,7 +371,7 @@ public class Juego {
     public static void opcionessegundoPiso() {
         System.out.println("----------------------------------------------------------");
         System.out.println("Al subir a la siguiente planta, te encuentras un cofre antiguo");
-        System.out.println("Decides abrirlo");
+        System.out.println("Dado a tu curiosidad, decides darle una patada al cofre para abrirlo");/*Decides abrirlo*/
         System.out.println("----------------------------------------------------------");
         recogerLoot();
         encuentroJoma();
@@ -375,41 +383,43 @@ public class Juego {
         amuleto = true;
         System.out.println("¡Y también un amuleto!");
         System.out.println("Sin más que hacer, decides subir al siguiente piso");
+        Audio.subirEscaleras();
         verInventario();
     }
 
     public static void preCruzarPantano() {
-        System.out.println("La criatura ha soltado una llave! 🗝️");
+        System.out.println("Tras derrotar a la criatura, te encuentras una llave junto a su cuerpo 🗝️"); /*La criatura ha soltado una llave!*/
         System.out.println("Decides recogerla y continuar con tu camino.");
         System.out.println("------------------------------------------------------------");
-        System.out.println("Sigues caminando y te encuentras un patano");
+        System.out.println("Sigues caminando y te encuentras un pantano");
         cruzarPantano();
     }
 
     public static void cruzarPantano(){
-        System.out.println("Tienes 3 opciones: \n1.Rodear\n2.Nadar🏊\n3.Balancearse en la liana");
+        Audio.sonidoPantano();
+        System.out.println("Tienes 3 opciones: \n1.Rodear\n2.Nadar 🏊\n3.Sacar el Tarzán que llevas dentro y usar las lianas");/*Balancearse en la liana*/
         System.out.println("¿Qué haces?");
         int opcion;
         opcion = leerOpcion();
         switch (opcion) {
             case 1:
                 System.out.println("------------------------------------------------------------");
-                System.out.println("Has intentado rodearlo y has muerto deshidratado☠️");
+                System.out.println("El pantano resultó ser más ancho de lo que pensabas.\nTus reservas de agua se agotaron y falleciste deshidratado ☠️");/*Has intentado rodearlo y has muerto deshidratado*/
                 gameOver();
                 break;
             case 2:
                 System.out.println("------------------------------------------------------------");
-                System.out.println("Has intentado nadar en el pantano");
+                System.out.println("Te armas de valentía y te lanzas al agua"); // Has intentado nadar en el pantano
                 System.out.println("------------------------------------------------------------");
-                System.out.println("Algo toca tu pierna...es un cocodrilo🐊!");
-                System.out.println("Te come hasta el último hueso 🦴");
+                System.out.println("Algo toca tu pierna... Es un gigantesco Bunyip 🐊!");
+                System.out.println("La persona a cargo del diálogo decidió no describir mucho esta parte del juego\nObviamente, has muerto");/*Te come hasta el último hueso 🦴*/
                 gameOver();
                 break;
             case 3:
                 System.out.println("------------------------------------------------------------");
                 System.out.println("Te sostienes fuerte de la liana...");
                 System.out.println("Agarras impulso...");
-                System.out.println("Y te balanceas");
+                System.out.println("Y te balanceas a la que te dejas los pulmones gritando");
                 System.out.println("------------------------------------------------------------");
                 System.out.println("¡Lograste pasar el pantano! ");
                 opcionesCastillo();
@@ -438,6 +448,7 @@ public class Juego {
                 } else if ((opcionPersonaje == 1 && amuleto == true)) {
                     System.out.println("Amuleto ✨");
                 }
+                System.out.println("------------------------------------------------------------");
             }
 
             if (opcionPersonaje == 2) {
@@ -449,6 +460,7 @@ public class Juego {
                 } else if ((opcionPersonaje == 2 && amuleto == true)) {
                     System.out.println("Amuleto ✨");
                 }
+                System.out.println("------------------------------------------------------------");
             }
 
             if (opcionPersonaje == 2000) {
@@ -460,43 +472,59 @@ public class Juego {
                 } else if ((opcionPersonaje == 2000 && amuleto == true)) {
                     System.out.println("Amuleto ✨");
                 }
+                System.out.println("------------------------------------------------------------");
             }
         }
     }
     public static void encuentroJoma(){
-        System.out.println("------------------------------------------------------------");
         System.out.println("Al subir al piso 3 te encuentras con un enemigo sorprendente,\nes una serpiente humanoide parece muy potente.");
         System.out.println("- ¿Qué hacesss aquí humano?");
-        System.out.println("- ¡Venir a rescatar a mi amad@, y nada me va a detener!");
+        System.out.println("- ¡Vengo a rescatar a mi amad@, y nada me va a detener!");
         System.out.println("------------------------------------------------------------");
         Enemigo JOMA = enemigo[1];
         systemCombat(JOMA);
     }
+
     public static void encuentroPrisioneros(){
-        System.out.println("------------------------------------------------------------");
+        Audio.sonidoPrision();
         System.out.println("Nuestro héroe al subir al piso 4 se ha encontrado una celda\ncon 4 prisioneros, 3 hombres y una mujer, están en un estado\nbastante lamentable.");
         System.out.println("Alaric:\n- ¡No sigas adelante, te va a ocurrir como a nosotros, o peor, como a los antiguos guerreros!");
         System.out.println("Lothar:\n- ¡Ah, Héroe, campeón de gestas y andanzas! Si acaso en vuestro zurrón o bolsa encontrasteis un cachivache,\nuna reliquia o un artilugio que al mundo pueda silenciar con su magia... \n¡Os imploro, sí, os conjuro a usarlo sin dilación!");
         System.out.println("-¡El silencio es oro, y más si la aventura os aguarda, oh, mi glorioso patán!");
-        System.out.println("Mirelda:\n- ¡Por fin, una cara que no pertenece a un carcelero! Dime, viajero...\n¿Acaso el sol sigue tejiendo oro en los telares de la ciudad?\nMi corazón está tan gastado como mis dedos sin arcilla. Sácame de esta piedra,\nque aún tengo diseños por cincelar y el mundo espera mis manos");
+        System.out.println("Mirelda:\n- ¡Por fin, una cara que no pertenece a un carcelero! Dime, viajero...\n¿Acaso el sol sigue tejiendo oro en los telares de la ciudad?\nMi corazón está tan gastado como mis dedos sin arcilla. Sácame de esta piedra,\nque aún tengo diseños por cincelar y el mundo espera mis manos.");
         System.out.println("Mordred:\n- Mis ojos, acostumbrados a la penumbra, apenas os distinguen,\nmas mi espíritu reconoce un atisbo de esperanza... o quizás, el último engaño antes del olvido.");
         System.out.println("Héroe:\n- Tranquilos amigos, volveré a por vosotros en cuánto esta aventura termine, y os ayudaré a volver con vuestras familias.");
         System.out.println("------------------------------------------------------------");
+        encuentroSudosu();
     }
     public static void encuentroSudosu(){
-        System.out.println("------------------------------------------------------------");
         System.out.println("Al seguir adelante nuestro héroe llega al piso 4, y en el fondo divisa un ente, como un espectro del pasado.");
         System.out.println("SudoSu:\n- ¿Qué haces aquí escoria? ¡Haré que pases a ser una de mis figuras de guerreros antiguos!");
-        System.out.println("Héroe:\n- ¡Eso nunca pasará!");
+        System.out.println("Héroe:\n- ¡Eso nunca pasará, malévolo ARFA!");
         //Añadir ataque de somnolencia
         //Añadir uso de "tapones o similar"
         //Añadir ataque de lanzamiento de figuras de guerreros antiguos
         //Añadir ataque final del héroe
         System.out.println("------------------------------------------------------------");
+        Enemigo SudoSu = enemigo[2];
+        systemCombat(SudoSu);
     }
 
-public static void opcionesFinal () {
-    System.out.println("La puerta del castillo se abre y puedes ver dentro dos figuras");
+    public static void conversacionGitano(){
+        System.out.println("------------------------------------------------------------");
+        System.out.println("Aníd:\n- ¿Al derrotar a mi mascota SudoSu pensabas que ya había terminado todo?");
+        System.out.println("- ¡De eso nada! No voy a pasar por alto que has tenido la osadía de robarme.\n  ¡Vas a pagarlo muy caro!");
+        System.out.println("------------------------------------------------------------");
+        System.out.println("De repente ves un resplandor que proviene de tu zurrón, el cuál se va haciendo más brillante.");
+    }
+
+    public static void combateGitano(){
+        Enemigo Anid = enemigo[3];
+        systemCombat(Anid);
+    }
+
+public static void opcionesFinal() {
+    System.out.println("Al subir las últimas escaleras antes de llegar a la almena, puedes ver dos figuras al fondo");
     System.out.println("Puedes ver a una princesa 👸🏼 y un dragón 🐲");
     System.out.println("Tienes varias opciones...");
     System.out.println("------------------------------------------------------------");
@@ -510,7 +538,7 @@ public static void opcionesFinal () {
         case 1:
             System.out.println("------------------------------------------------------------");
             System.out.println("¡Has hecho bien en atacarla, era una villana!");
-            gamePased();
+            gameCleared();
             break;
         case 2:
             System.out.println("------------------------------------------------------------");
@@ -525,7 +553,7 @@ public static void opcionesFinal () {
         case 4:
             System.out.println("------------------------------------------------------------");
             System.out.println("¡Salvas a tu amor verdadero y vivís una vida maravillosa!");
-            gamePased();
+            gameCleared();
             break;
     }
 }
@@ -543,11 +571,12 @@ public static void opcionesFinal () {
         }
     }
 
-    public static void gamePased(){
+    public static void gameCleared(){
         System.out.println("------------------------------------------------------------");
-        System.out.println("\n        🎉 HAS GANADO 🎉");
+        System.out.println("\n          🎉 HAS GANADO 🎉");
         System.out.println("         ¡Gracias por jugar!\n");
         System.out.println("------------------------------------------------------------");
+        System.out.println("Ningún desarrollador prisionero ha sido herido durante esta aventura,\nse les rescató fuera de cámara.");
         System.out.println("   Presiona 0 si quieres volver a jugar");
         int fin;
         fin = leerOpcion();
