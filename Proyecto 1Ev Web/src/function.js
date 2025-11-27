@@ -91,7 +91,18 @@ const APP_PAGES = {
     },
     'characters': {
         title: 'PERSONAJES JUGABLES',
-        content: `<p>Elige tu destino: El Guerrero Implacable, La Hechicera de los Cielos o El Ladrón Silencioso. Cada uno con habilidades únicas para enfrentar la oscuridad.</p>`
+        content: `<p>
+                -- Guerrero - HP: 125 DMG: 30 --<br><br>
+                Un caballero armado capaz de aguantar ataques del enemigo. <br><br>{Inventario inicial: Espada, Escudo}<br><br>
+                
+                -- Mago - HP: 100 DMG: 40 --<br><br>
+                Un hábil hechicero al que no le falta poder de ataque. <br><br>{Inventario inicial: Varita, Libro de Hechizos}<br><br>
+                
+                -- Helicoptero --<br><br>
+                Una máquina de guerra, armada hasta arriba capaz de destruir todo a su camino... Siempre y cuando haya alguien pilotando. <br><br>{Inventario inicial: Vacío}<br><br>
+                
+                Hay rumores de que igual se encuentra un campeón secreto en alguna parte pero nadie lo ha sabido encontrar por 2 milenios.
+                    </p>`
     },
     'creators': {
         title: 'FICHA TÉCNICA Y EQUIPO',
